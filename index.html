@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Másodfokú Egyenlet Kalkulátor</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(to bottom, #ffcccb, #ffeb3b);
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 20px auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        section {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s;
+        }
+
+            section:hover {
+                transform: translateY(-5px);
+            }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            border: 2px solid #4CAF50;
+            border-radius: 5px;
+            transition: border-color 0.3s;
+        }
+
+            input:focus {
+                border-color: #FF5722;
+                outline: none;
+            }
+
+        button {
+            background: #FF5722;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: background-color 0.3s;
+        }
+
+            button:hover {
+                background: #E64A19;
+            }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #E8F5E9;
+            border-left: 6px solid #4CAF50;
+            border-radius: 10px;
+            font-size: 1.2rem;
+        }
+
+        .image-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+            .image-container img {
+                max-width: 100%;
+                height: auto;
+                border-radius: 10px;
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #333;
+            color: white;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+            main {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            section {
+                min-width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🎉 Játékos Másodfokú Egyenlet Kalkulátor 🎉</h1>
+    </header>
+    <main>
+        <section>
+            <h2>📚 Mi az a másodfokú egyenlet?</h2>
+            <p>A másodfokú egyenlet egy olyan matematikai kifejezés, amely így néz ki:</p>
+            <p style="text-align: center; font-size: 1.2rem; font-weight: bold;">ax<sup>2</sup> + bx + c = 0</p>
+            <p>Itt:</p>
+            <ul>
+                <li><strong>a</strong>: A másodfokú tag együtthatója (nem lehet nulla).</li>
+                <li><strong>b</strong>: Az elsőfokú tag együtthatója.</li>
+                <li><strong>c</strong>: A konstans tag.</li>
+            </ul>
+            <p>A megoldások kiszámításához ezt a képletet használjuk:</p>
+            <p style="text-align: center; font-size: 1.2rem; font-weight: bold;">x = (-b ± √(b<sup>2</sup> - 4ac)) / 2a</p>
+        </section>
+
+        <section>
+            <div class="image-container">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Quadratic_equation_parabola.svg/800px-Quadratic_equation_parabola.svg.png" alt="Másodfokú egyenlet grafikus ábrázolása">
+                <p><em>A másodfokú egyenlet grafikonja egy parabola.</em></p>
+            </div>
+        </section>
+
+        <section>
+            <h2>🔢 Próbáld ki Te is!</h2>
+            <div class="form-group">
+                <label for="a">a együttható:</label>
+                <input type="number" id="a" placeholder="Írd be az a értékét">
+            </div>
+            <div class="form-group">
+                <label for="b">b együttható:</label>
+                <input type="number" id="b" placeholder="Írd be a b értékét">
+            </div>
+            <div class="form-group">
+                <label for="c">c együttható:</label>
+                <input type="number" id="c" placeholder="Írd be a c értékét">
+            </div>
+            <button onclick="solveEquation()">Számítás</button>
+
+            <div id="result" class="result" style="display: none;"></div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Játékos Másodfokú Egyenlet Kalkulátor</p>
+    </footer>
+
+    <script>
+        function solveEquation() {
+            const a = parseFloat(document.getElementById('a').value);
+            const b = parseFloat(document.getElementById('b').value);
+            const c = parseFloat(document.getElementById('c').value);
+            const resultDiv = document.getElementById('result');
+
+            if (isNaN(a) || isNaN(b) || isNaN(c)) {
+                resultDiv.style.display = 'block';
+                resultDiv.style.borderLeftColor = 'red';
+                resultDiv.innerHTML = '<strong>Hiba:</strong> Kérjük, töltsd ki az összes mezőt érvényes számokkal!';
+                return;
+            }
+
+            if (a === 0) {
+                resultDiv.style.display = 'block';
+                resultDiv.style.borderLeftColor = 'red';
+                resultDiv.innerHTML = '<strong>Hiba:</strong> Az <em>a</em> értéke nem lehet nulla, mert nem másodfokú az egyenlet!';
+                return;
+            }
+
+            const discriminant = b * b - 4 * a * c;
+
+            if (discriminant < 0) {
+                resultDiv.style.display = 'block';
+                resultDiv.style.borderLeftColor = 'orange';
+                resultDiv.innerHTML = 'Nincs valós megoldás, mert a diszkrimináns negatív.';
+            } else if (discriminant === 0) {
+                const x = -b / (2 * a);
+                resultDiv.style.display = 'block';
+                resultDiv.style.borderLeftColor = '#4CAF50';
+                resultDiv.innerHTML = `Egy valós megoldás van: x = ${x.toFixed(2)}`;
+            } else {
+                const x1 = (-b + Math.sqrt(discriminant)) / (2 * a);
+                const x2 = (-b - Math.sqrt(discriminant)) / (2 * a);
+                resultDiv.style.display = 'block';
+                resultDiv.style.borderLeftColor = '#4CAF50';
+                resultDiv.innerHTML = `Két valós megoldás van: x<sub>1</sub> = ${x1.toFixed(2)}, x<sub>2</sub> = ${x2.toFixed(2)}`;
+            }
+        }
+    </script>
+</body>
+</html>
