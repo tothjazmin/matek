@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Másodfokú Egyenlet Kalkulátor</title>
     <style>
+        /* A stílusokat ugyanúgy megtartjuk */
         body {
             font-family: 'Comic Sans MS', cursive, sans-serif;
             line-height: 1.6;
@@ -43,9 +44,9 @@
             transition: transform 0.2s;
         }
 
-            section:hover {
-                transform: translateY(-5px);
-            }
+        section:hover {
+            transform: translateY(-5px);
+        }
 
         .form-group {
             margin-bottom: 1rem;
@@ -66,10 +67,10 @@
             transition: border-color 0.3s;
         }
 
-            input:focus {
-                border-color: #FF5722;
-                outline: none;
-            }
+        input:focus {
+            border-color: #FF5722;
+            outline: none;
+        }
 
         button {
             background: #FF5722;
@@ -82,9 +83,9 @@
             transition: background-color 0.3s;
         }
 
-            button:hover {
-                background: #E64A19;
-            }
+        button:hover {
+            background: #E64A19;
+        }
 
         .result {
             margin-top: 20px;
@@ -100,13 +101,6 @@
             margin: 20px 0;
         }
 
-            .image-container img {
-                max-width: 100%;
-                height: auto;
-                border-radius: 10px;
-                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-            }
-
         footer {
             text-align: center;
             padding: 20px;
@@ -114,22 +108,21 @@
             color: white;
             margin-top: 30px;
         }
-
-        @media (max-width: 768px) {
-            main {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            section {
-                min-width: 90%;
-            }
+        
+        /* Grafikon megjelenítés */
+        canvas {
+            max-width: 100%;
+            margin-top: 20px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
         }
+
     </style>
+    <!-- Chart.js könyvtár betöltése -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <header>
-        <h1>🎉 Játékos Másodfokú Egyenlet Kalkulátor 🎉</h1>
+        <h1>🎉 Másodfokú Egyenlet Kalkulátor 🎉</h1>
     </header>
     <main>
         <section>
@@ -148,8 +141,8 @@
 
         <section>
             <div class="image-container">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Quadratic_equation_parabola.svg/800px-Quadratic_equation_parabola.svg.png" alt="Másodfokú egyenlet grafikus ábrázolása">
-                <p><em>A másodfokú egyenlet grafikonja egy parabola.</em></p>
+                <!-- Parabola grafikon helye -->
+                <canvas id="parabolaChart" width="400" height="400"></canvas>
             </div>
         </section>
 
@@ -215,6 +208,39 @@
                 resultDiv.style.borderLeftColor = '#4CAF50';
                 resultDiv.innerHTML = `Két valós megoldás van: x<sub>1</sub> = ${x1.toFixed(2)}, x<sub>2</sub> = ${x2.toFixed(2)}`;
             }
+
+            // Grafikon frissítése
+            const ctx = document.getElementById('parabolaChart').getContext('2d');
+            const dataPoints = [];
+            for (let x = -10; x <= 10; x += 0.1) {
+                let y = a * x * x + b * x + c;
+                dataPoints.push({x: x, y: y});
+            }
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    datasets: [{
+                        label: 'Parabola',
+                        data: dataPoints,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            position: 'bottom'
+                        },
+                        y: {
+                            min: Math.min(...dataPoints.map(point => point.y)) - 10,
+                            max: Math.max(...dataPoints.map(point => point.y)) + 10
+                        }
+                    }
+                }
+            });
         }
     </script>
 </body>
