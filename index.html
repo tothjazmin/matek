@@ -8,19 +8,48 @@
         body {
             font-family: 'Comic Sans MS', cursive, sans-serif;
             line-height: 1.6;
-            background: linear-gradient(to bottom, #e0f7fa, #ffecb3);
+            background: linear-gradient(to bottom, #ffcccb, #ffeb3b); /* Sárga-rozsaszín átmenet */
             color: #333;
             margin: 0;
             padding: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes backgroundChange {
+            0% {
+                background: linear-gradient(to bottom, #ffcccb, #ffeb3b);
+            }
+
+            50% {
+                background: linear-gradient(to bottom, #ffb6c1, #ffeb3b);
+            }
+
+            100% {
+                background: linear-gradient(to bottom, #ffe4e1, #ffeb3b);
+            }
         }
 
         header {
-            background: #ffb74d;
+            background: #ffb6c1;
             color: white;
             text-align: center;
             padding: 1.5rem 0;
             font-size: 1.5rem;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            animation: headerAnimation 1s ease-out;
+        }
+
+        @keyframes headerAnimation {
+            0% {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         main {
@@ -29,6 +58,19 @@
             display: flex;
             justify-content: space-between;
             gap: 20px;
+            animation: mainAnimation 2s ease-in-out;
+        }
+
+        @keyframes mainAnimation {
+            0% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
         section {
@@ -39,6 +81,19 @@
             padding: 20px;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
             transition: transform 0.2s;
+            animation: sectionAnimation 2s ease-out;
+        }
+
+        @keyframes sectionAnimation {
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         section:hover {
@@ -59,36 +114,37 @@
             width: 100%;
             padding: 10px;
             font-size: 1rem;
-            border: 2px solid #ffb74d;
+            border: 2px solid #ffb6c1;
             border-radius: 5px;
             transition: border-color 0.3s;
         }
 
-        input:focus {
-            border-color: #ff7043;
-            outline: none;
-        }
+            input:focus {
+                border-color: #ff69b4;
+                outline: none;
+            }
 
         button {
-            background: #81c784;
+            background: #ff69b4;
             color: white;
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             font-size: 1.2rem;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.2s ease;
         }
 
-        button:hover {
-            background: #66bb6a;
-        }
+            button:hover {
+                background: #ff1493;
+                transform: scale(1.1);
+            }
 
         .result {
             margin-top: 20px;
             padding: 15px;
-            background: #f1f8e9;
-            border-left: 6px solid #66bb6a;
+            background: #ffe4e1;
+            border-left: 6px solid #ffb6c1;
             border-radius: 10px;
             font-size: 1.2rem;
         }
@@ -101,7 +157,7 @@
         footer {
             text-align: center;
             padding: 20px;
-            background: #333;
+            background: #ffb6c1;
             color: white;
             margin-top: 30px;
         }
@@ -112,53 +168,86 @@
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
         }
 
-        .explanation {
-            color: #ff7043;
+        /* Buborékok animációja */
+        .bubble {
+            position: absolute;
+            bottom: -50px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: bubbleAnimation 5s infinite;
         }
 
-        .highlight {
-            color: #64b5f6;
-        }
+            .bubble:nth-child(1) {
+                width: 30px;
+                height: 30px;
+                left: 10%;
+                animation-duration: 4s;
+            }
 
-        .discriminant {
-            font-weight: bold;
-            color: #d32f2f;
-        }
+            .bubble:nth-child(2) {
+                width: 50px;
+                height: 50px;
+                left: 25%;
+                animation-duration: 6s;
+            }
 
-        .solutions {
-            font-weight: bold;
-            color: #388e3c;
+            .bubble:nth-child(3) {
+                width: 40px;
+                height: 40px;
+                left: 50%;
+                animation-duration: 5s;
+            }
+
+            .bubble:nth-child(4) {
+                width: 60px;
+                height: 60px;
+                left: 75%;
+                animation-duration: 3s;
+            }
+
+        @keyframes bubbleAnimation {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 0.7;
+            }
+
+            100% {
+                transform: translateY(-700px) scale(1.5);
+                opacity: 0;
+            }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
     <header>
         <h1>🎉 Másodfokú Egyenlet Kalkulátor 🎉</h1>
     </header>
     <main>
-        <section>
+        <section style="flex: 2;">
             <h2>📚 Mi az a másodfokú egyenlet?</h2>
             <p>A másodfokú egyenlet egy olyan matematikai kifejezés, amely így néz ki:</p>
             <p style="text-align: center; font-size: 1.2rem; font-weight: bold;">ax<sup>2</sup> + bx + c = 0</p>
             <p>Itt:</p>
             <ul>
-                <li><span class="highlight"><strong>a</strong></span>: A másodfokú tag együtthatója (nem lehet nulla).</li>
-                <li><span class="highlight"><strong>b</strong></span>: Az elsőfokú tag együtthatója.</li>
-                <li><span class="highlight"><strong>c</strong></span>: A konstans tag.</li>
+                <li><strong>a</strong>: A másodfokú tag együtthatója (nem lehet nulla).</li>
+                <li><strong>b</strong>: Az elsőfokú tag együtthatója.</li>
+                <li><strong>c</strong>: A konstans tag.</li>
             </ul>
             <p>A megoldások kiszámításához ezt a képletet használjuk:</p>
             <p style="text-align: center; font-size: 1.2rem; font-weight: bold;">x = (-b ± √(b<sup>2</sup> - 4ac)) / 2a</p>
-            <p><strong>Hol használjuk a másodfokú egyenletet?</strong></p>
-            <ul>
-                <li>🎯 <strong>Fizikában:</strong> például a lövedékek mozgáspályájának számításához.</li>
-                <li>🏗️ <strong>Építészetben:</strong> boltívek és hídszerkezetek tervezéséhez.</li>
-                <li>📊 <strong>Pénzügyekben:</strong> profit-maximalizálási problémák megoldásához.</li>
-                <li>🎮 <strong>Játékfejlesztésben:</strong> karakterek ugrásának pályájához.</li>
-            </ul>
         </section>
 
-        <section>
+        <section style="flex: 1;">
+            <div class="image-container">
+                <!-- Parabola grafikon helye -->
+                <canvas id="parabolaChart" width="400" height="400"></canvas>
+            </div>
+        </section>
+
+        <section style="flex: 1;">
             <h2>🔢 Próbáld ki Te is!</h2>
             <div class="form-group">
                 <label for="a">a együttható:</label>
@@ -176,33 +265,29 @@
 
             <div id="result" class="result" style="display: none;"></div>
         </section>
-
-        <section id="graph-section" style="display: none;">
-            <h2>📈 Parabola grafikon</h2>
-            <div class="image-container">
-                <canvas id="parabolaChart" width="400" height="400"></canvas>
-            </div>
-        </section>
     </main>
     <footer>
         <p>&copy; 2025 Játékos Másodfokú Egyenlet Kalkulátor</p>
+        <a href="https://sites.google.com/view/ita-tjm10b/f%C5%91oldal" target="_blank" style="color: white;">📎 További információ</a>
     </footer>
 
-    <script>
-        let parabolaChart = null;
+    <!-- Buborékok animáció -->
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
 
+    <script>
         function solveEquation() {
             const a = parseFloat(document.getElementById('a').value);
             const b = parseFloat(document.getElementById('b').value);
             const c = parseFloat(document.getElementById('c').value);
             const resultDiv = document.getElementById('result');
-            const graphSection = document.getElementById('graph-section');
 
             if (isNaN(a) || isNaN(b) || isNaN(c)) {
                 resultDiv.style.display = 'block';
                 resultDiv.style.borderLeftColor = 'red';
                 resultDiv.innerHTML = '<strong>Hiba:</strong> Kérjük, töltsd ki az összes mezőt érvényes számokkal!';
-                graphSection.style.display = 'none';
                 return;
             }
 
@@ -210,76 +295,68 @@
                 resultDiv.style.display = 'block';
                 resultDiv.style.borderLeftColor = 'red';
                 resultDiv.innerHTML = '<strong>Hiba:</strong> Az <em>a</em> értéke nem lehet nulla, mert nem másodfokú az egyenlet!';
-                graphSection.style.display = 'none';
                 return;
             }
 
             const discriminant = b * b - 4 * a * c;
-            let solutionText = `<p class="discriminant">Diszkrimináns: Δ = ${discriminant}</p>`;
 
             if (discriminant < 0) {
                 resultDiv.style.display = 'block';
                 resultDiv.style.borderLeftColor = 'orange';
-                solutionText += '<p class="solutions">Nincs valós megoldás, mert a diszkrimináns negatív.</p>';
-                resultDiv.innerHTML = solutionText;
-                graphSection.style.display = 'none';
+                resultDiv.innerHTML = 'Nincs valós megoldás, mert a diszkrimináns negatív.';
+                document.getElementById('parabolaChart').style.display = 'none'; // Ha nincs megoldás, ne jelenjen meg a parabola
             } else {
-                graphSection.style.display = 'block';
+                document.getElementById('parabolaChart').style.display = 'block'; // Ha van megoldás, jelenjen meg a parabola
 
                 if (discriminant === 0) {
                     const x = -b / (2 * a);
-                    solutionText += `<p class="solutions">Egy valós megoldás van: x = ${x.toFixed(2)}</p>`;
+                    resultDiv.style.display = 'block';
+                    resultDiv.style.borderLeftColor = '#4CAF50';
+                    resultDiv.innerHTML = `Egy valós megoldás van: x = ${x.toFixed(2)}`;
                 } else {
                     const x1 = (-b + Math.sqrt(discriminant)) / (2 * a);
                     const x2 = (-b - Math.sqrt(discriminant)) / (2 * a);
-                    solutionText += `<p class="solutions">Két valós megoldás van: x<sub>1</sub> = ${x1.toFixed(2)}, x<sub>2</sub> = ${x2.toFixed(2)}</p>`;
+                    resultDiv.style.display = 'block';
+                    resultDiv.style.borderLeftColor = '#4CAF50';
+                    resultDiv.innerHTML = `Két valós megoldás van: x<sub>1</sub> = ${x1.toFixed(2)}, x<sub>2</sub> = ${x2.toFixed(2)}`;
                 }
 
-                resultDiv.style.display = 'block';
-                resultDiv.style.borderLeftColor = '#66bb6a';
-                resultDiv.innerHTML = solutionText;
+                // Grafikon frissítése
+                const ctx = document.getElementById('parabolaChart').getContext('2d');
+                const dataPoints = [];
+                for (let x = -10; x <= 10; x += 0.1) {
+                    let y = a * x * x + b * x + c;
+                    dataPoints.push({ x: x, y: y });
+                }
 
-                updateGraph(a, b, c);
-            }
-        }
-
-        function updateGraph(a, b, c) {
-            const ctx = document.getElementById('parabolaChart').getContext('2d');
-
-            if (parabolaChart) {
-                parabolaChart.destroy();
-            }
-
-            const dataPoints = [];
-            for (let x = -10; x <= 10; x += 0.1) {
-                let y = a * x * x + b * x + c;
-                dataPoints.push({ x: x, y: y });
-            }
-
-            parabolaChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    datasets: [{
-                        label: 'Parabola',
-                        data: dataPoints,
-                        borderColor: 'rgba(102, 187, 106, 1)',
-                        borderWidth: 2,
-                        fill: false
-                    }]
-                },
-                options: {
-                    scales: {
-                        x: {
-                            type: 'linear',
-                            position: 'bottom'
-                        },
-                        y: {
-                            min: Math.min(...dataPoints.map(point => point.y)) - 10,
-                            max: Math.max(...dataPoints.map(point => point.y)) + 10
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        datasets: [{
+                            label: 'Parabola',
+                            data: dataPoints,
+                            borderColor: 'rgba(0, 128, 128, 1)', // Tükrözött kék szín
+                            borderWidth: 2,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            x: {
+                                type: 'linear',
+                                position: 'bottom'
+                            },
+                            y: {
+                                min: Math.min(...dataPoints.map(point => point.y)) - 10,
+                                max: Math.max(...dataPoints.map(point => point.y)) + 10
+                            }
                         }
                     }
-                }
-            });
+                });
+
+                // Konfetti
+                confetti();
+            }
         }
     </script>
 </body>
