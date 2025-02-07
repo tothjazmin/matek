@@ -5,18 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Másodfokú Egyenlet Kalkulátor</title>
     <style>
-        /* A stílusokat ugyanúgy megtartjuk */
         body {
             font-family: 'Comic Sans MS', cursive, sans-serif;
             line-height: 1.6;
-            background: linear-gradient(to bottom, #ffcccb, #ffeb3b);
+            background: linear-gradient(to bottom, #e0f7fa, #ffecb3);
             color: #333;
             margin: 0;
             padding: 0;
         }
 
         header {
-            background: #4CAF50;
+            background: #ffb74d;
             color: white;
             text-align: center;
             padding: 1.5rem 0;
@@ -28,9 +27,7 @@
             max-width: 1200px;
             margin: 20px auto;
             display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-            align-items: flex-start;
+            justify-content: space-between;
             gap: 20px;
         }
 
@@ -62,18 +59,18 @@
             width: 100%;
             padding: 10px;
             font-size: 1rem;
-            border: 2px solid #4CAF50;
+            border: 2px solid #ffb74d;
             border-radius: 5px;
             transition: border-color 0.3s;
         }
 
         input:focus {
-            border-color: #FF5722;
+            border-color: #ff7043;
             outline: none;
         }
 
         button {
-            background: #FF5722;
+            background: #81c784;
             color: white;
             padding: 10px 20px;
             border: none;
@@ -84,14 +81,14 @@
         }
 
         button:hover {
-            background: #E64A19;
+            background: #66bb6a;
         }
 
         .result {
             margin-top: 20px;
             padding: 15px;
-            background: #E8F5E9;
-            border-left: 6px solid #4CAF50;
+            background: #f1f8e9;
+            border-left: 6px solid #66bb6a;
             border-radius: 10px;
             font-size: 1.2rem;
         }
@@ -108,16 +105,31 @@
             color: white;
             margin-top: 30px;
         }
-        
-        /* Grafikon megjelenítés */
+
         canvas {
             max-width: 100%;
             margin-top: 20px;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
         }
 
+        .explanation {
+            color: #ff7043;
+        }
+
+        .highlight {
+            color: #64b5f6;
+        }
+
+        .discriminant {
+            font-weight: bold;
+            color: #d32f2f;
+        }
+
+        .solutions {
+            font-weight: bold;
+            color: #388e3c;
+        }
     </style>
-    <!-- Chart.js könyvtár betöltése -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -131,19 +143,19 @@
             <p style="text-align: center; font-size: 1.2rem; font-weight: bold;">ax<sup>2</sup> + bx + c = 0</p>
             <p>Itt:</p>
             <ul>
-                <li><strong>a</strong>: A másodfokú tag együtthatója (nem lehet nulla).</li>
-                <li><strong>b</strong>: Az elsőfokú tag együtthatója.</li>
-                <li><strong>c</strong>: A konstans tag.</li>
+                <li><span class="highlight"><strong>a</strong></span>: A másodfokú tag együtthatója (nem lehet nulla).</li>
+                <li><span class="highlight"><strong>b</strong></span>: Az elsőfokú tag együtthatója.</li>
+                <li><span class="highlight"><strong>c</strong></span>: A konstans tag.</li>
             </ul>
             <p>A megoldások kiszámításához ezt a képletet használjuk:</p>
             <p style="text-align: center; font-size: 1.2rem; font-weight: bold;">x = (-b ± √(b<sup>2</sup> - 4ac)) / 2a</p>
-        </section>
-
-        <section>
-            <div class="image-container">
-                <!-- Parabola grafikon helye -->
-                <canvas id="parabolaChart" width="400" height="400"></canvas>
-            </div>
+            <p><strong>Hol használjuk a másodfokú egyenletet?</strong></p>
+            <ul>
+                <li>🎯 <strong>Fizikában:</strong> például a lövedékek mozgáspályájának számításához.</li>
+                <li>🏗️ <strong>Építészetben:</strong> boltívek és hídszerkezetek tervezéséhez.</li>
+                <li>📊 <strong>Pénzügyekben:</strong> profit-maximalizálási problémák megoldásához.</li>
+                <li>🎮 <strong>Játékfejlesztésben:</strong> karakterek ugrásának pályájához.</li>
+            </ul>
         </section>
 
         <section>
@@ -164,22 +176,33 @@
 
             <div id="result" class="result" style="display: none;"></div>
         </section>
+
+        <section id="graph-section" style="display: none;">
+            <h2>📈 Parabola grafikon</h2>
+            <div class="image-container">
+                <canvas id="parabolaChart" width="400" height="400"></canvas>
+            </div>
+        </section>
     </main>
     <footer>
         <p>&copy; 2025 Játékos Másodfokú Egyenlet Kalkulátor</p>
     </footer>
 
     <script>
+        let parabolaChart = null;
+
         function solveEquation() {
             const a = parseFloat(document.getElementById('a').value);
             const b = parseFloat(document.getElementById('b').value);
             const c = parseFloat(document.getElementById('c').value);
             const resultDiv = document.getElementById('result');
+            const graphSection = document.getElementById('graph-section');
 
             if (isNaN(a) || isNaN(b) || isNaN(c)) {
                 resultDiv.style.display = 'block';
                 resultDiv.style.borderLeftColor = 'red';
                 resultDiv.innerHTML = '<strong>Hiba:</strong> Kérjük, töltsd ki az összes mezőt érvényes számokkal!';
+                graphSection.style.display = 'none';
                 return;
             }
 
@@ -187,43 +210,59 @@
                 resultDiv.style.display = 'block';
                 resultDiv.style.borderLeftColor = 'red';
                 resultDiv.innerHTML = '<strong>Hiba:</strong> Az <em>a</em> értéke nem lehet nulla, mert nem másodfokú az egyenlet!';
+                graphSection.style.display = 'none';
                 return;
             }
 
             const discriminant = b * b - 4 * a * c;
+            let solutionText = `<p class="discriminant">Diszkrimináns: Δ = ${discriminant}</p>`;
 
             if (discriminant < 0) {
                 resultDiv.style.display = 'block';
                 resultDiv.style.borderLeftColor = 'orange';
-                resultDiv.innerHTML = 'Nincs valós megoldás, mert a diszkrimináns negatív.';
-            } else if (discriminant === 0) {
-                const x = -b / (2 * a);
-                resultDiv.style.display = 'block';
-                resultDiv.style.borderLeftColor = '#4CAF50';
-                resultDiv.innerHTML = `Egy valós megoldás van: x = ${x.toFixed(2)}`;
+                solutionText += '<p class="solutions">Nincs valós megoldás, mert a diszkrimináns negatív.</p>';
+                resultDiv.innerHTML = solutionText;
+                graphSection.style.display = 'none';
             } else {
-                const x1 = (-b + Math.sqrt(discriminant)) / (2 * a);
-                const x2 = (-b - Math.sqrt(discriminant)) / (2 * a);
+                graphSection.style.display = 'block';
+
+                if (discriminant === 0) {
+                    const x = -b / (2 * a);
+                    solutionText += `<p class="solutions">Egy valós megoldás van: x = ${x.toFixed(2)}</p>`;
+                } else {
+                    const x1 = (-b + Math.sqrt(discriminant)) / (2 * a);
+                    const x2 = (-b - Math.sqrt(discriminant)) / (2 * a);
+                    solutionText += `<p class="solutions">Két valós megoldás van: x<sub>1</sub> = ${x1.toFixed(2)}, x<sub>2</sub> = ${x2.toFixed(2)}</p>`;
+                }
+
                 resultDiv.style.display = 'block';
-                resultDiv.style.borderLeftColor = '#4CAF50';
-                resultDiv.innerHTML = `Két valós megoldás van: x<sub>1</sub> = ${x1.toFixed(2)}, x<sub>2</sub> = ${x2.toFixed(2)}`;
+                resultDiv.style.borderLeftColor = '#66bb6a';
+                resultDiv.innerHTML = solutionText;
+
+                updateGraph(a, b, c);
+            }
+        }
+
+        function updateGraph(a, b, c) {
+            const ctx = document.getElementById('parabolaChart').getContext('2d');
+
+            if (parabolaChart) {
+                parabolaChart.destroy();
             }
 
-            // Grafikon frissítése
-            const ctx = document.getElementById('parabolaChart').getContext('2d');
             const dataPoints = [];
             for (let x = -10; x <= 10; x += 0.1) {
                 let y = a * x * x + b * x + c;
-                dataPoints.push({x: x, y: y});
+                dataPoints.push({ x: x, y: y });
             }
 
-            new Chart(ctx, {
+            parabolaChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     datasets: [{
                         label: 'Parabola',
                         data: dataPoints,
-                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderColor: 'rgba(102, 187, 106, 1)',
                         borderWidth: 2,
                         fill: false
                     }]
