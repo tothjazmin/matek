@@ -267,11 +267,10 @@
         </section>
     </main>
     <footer>
-        <p>&copy; 2025 Játékos Másodfokú Egyenlet Kalkulátor</p>
-        <a href="https://sites.google.com/view/ita-tjm10b/f%C5%91oldal" target="_blank" style="color: white;">📎 További információ</a>
+        <p>&copy; 2025 Másodfokú Egyenlet Kalkulátor</p>
+        <a href="https://sites.google.com/view/ita-tjm10b/f%C5%91oldal" target="_blank" style="color: white;">📎 Google Sites Oldalam</a>
     </footer>
 
-    <!-- Buborékok animáció -->
     <div class="bubble"></div>
     <div class="bubble"></div>
     <div class="bubble"></div>
@@ -321,7 +320,7 @@
                     resultDiv.innerHTML = `Két valós megoldás van: x<sub>1</sub> = ${x1.toFixed(2)}, x<sub>2</sub> = ${x2.toFixed(2)}`;
                 }
 
-                // Grafikon frissítése
+                
                 const ctx = document.getElementById('parabolaChart').getContext('2d');
                 const dataPoints = [];
                 for (let x = -10; x <= 10; x += 0.1) {
@@ -354,7 +353,7 @@
                     }
                 });
 
-                // Konfetti
+                
                 confetti();
             }
         }
